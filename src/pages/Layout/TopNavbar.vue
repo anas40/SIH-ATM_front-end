@@ -112,4 +112,18 @@ export default {
 };
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+.md-title{
+  font-family: Georgia, serif;
+font-size: 45px !important;
+letter-spacing: 2px;
+word-spacing: 2px;
+color: #000000;
+font-weight: normal;
+text-decoration: none;
+font-style: normal;
+font-variant: normal;
+text-transform: none;
+}
+
+</style>

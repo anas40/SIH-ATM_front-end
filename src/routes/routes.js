@@ -20,7 +20,7 @@ const routes = [{
   },
   children: [{
       path: '/joblist',
-      name: 'joblist',
+      name: 'Joblist',
       component: TableList
     },
     {
