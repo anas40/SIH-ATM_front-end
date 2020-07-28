@@ -122,7 +122,7 @@ export default {
   padding: 12px;
   min-height: 75vh;
   background-image:linear-gradient(rgba(0, 0, 0, 0.5),
-                       rgba(0, 0, 0, 0.5)),url('https://www.lufthansa-technik.com/documents/5875801/6266982/Digtal+on+air+1920x1080/efed82f2-4f47-4000-9be0-e092d8b377c8?t=1578320594487');
+                       rgba(0, 0, 0, 0.5)),url('/assets/images/Background/ItemDescription_BG.jpg');
   background-repeat:no-repeat;
   background-attachment:fixed;
   background-size:cover;

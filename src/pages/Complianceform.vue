@@ -7,13 +7,13 @@
         <h2>Compliance form</h2>
         <b-form @submit="onSubmit" @reset="onReset" v-if="show">
           <div class="form-group-1">
-          <input type="number" id="input-1" v-model="form.assignmentNumber" placeholder="Assignment Number" disabled>
-          <input type="text" id="input-2" v-model="form.equipmentName" placeholder="Equipment Name" disabled>
-          <input type="text" id="input-3" v-model="form.description" placeholder="Description" disabled>          
-          <input type="number" id="input-4" v-model="form.equipmentCode" placeholder="Equipment Code" disabled>
-          <input type="text" id="input-5" v-model="form.status" placeholder="Status" disabled>
-          <input type="text" id="input-6" v-model="form.location" placeholder="Location" disabled>
-          <input type="number" id="input-7" v-model="form.cycle" placeholder="Cycle" disabled>
+          <input type="number" id="input-1" v-model="form.assignmentNumber" label="Assignment Number" placeholder="Assignment Number" disabled>
+          <input type="text" id="input-2" v-model="form.equipmentName" label="Equipmnet Name" placeholder="Equipment Name" disabled>
+          <input type="text" id="input-3" v-model="form.description" label="Description" placeholder="Description" disabled>          
+          <input type="number" id="input-4" v-model="form.equipmentCode" label="Equipment Code" placeholder="Equipment Code" disabled>
+          <input type="text" id="input-5" v-model="form.status" label="Status" placeholder="Status" disabled>
+          <input type="text" id="input-6" v-model="form.location" label="Location" placeholder="Location" disabled>
+          <input type="number" id="input-7" v-model="form.cycle" label="Cycle" placeholder="Cycle" disabled>
 
           </div>
           
@@ -189,7 +189,7 @@ export default {
 }
 .body{
   background-image:linear-gradient(rgba(0, 0, 0, 0.5),
-                       rgba(0, 0, 0, 0.5)),url('https://cdn.hipwallpaper.com/i/57/62/u2yVFf.jpg');
+                       rgba(0, 0, 0, 0.5)),url('/assets/images/Background/Compliance_Form_BG.jpg');
   background-repeat:no-repeat;
   background-attachment:fixed;
   background-size:cover;

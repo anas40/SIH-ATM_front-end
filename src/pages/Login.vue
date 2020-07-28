@@ -121,7 +121,7 @@ export default {
 }
 .body{
   position: relative;
-  background: url('/assets/images/bg.jpg') no-repeat center fixed;
+  background: url('/assets/images/Background/bg.jpg') no-repeat center fixed;
   background-size: 100% 100%;
   overflow-y: auto;
   color:white;

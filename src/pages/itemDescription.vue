@@ -143,7 +143,7 @@ export default {
 <style scoped>
 .body{
   background-image:linear-gradient(rgba(0, 0, 0, 0.5),
-                       rgba(0, 0, 0, 0.5)),url('https://www.vaughn.edu/wp-content/uploads/2019/05/Aviation-Maintenance.jpg');
+                       rgba(0, 0, 0, 0.5)),url('/assets/images/Background/ItemDescription_BG.jpg');
   background-repeat:no-repeat;
   background-attachment:fixed;
   background-size:cover;

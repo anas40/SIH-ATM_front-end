@@ -5,12 +5,12 @@
         <b-col cols="12" md="8" offset="2" id="main-box">
         <h2>Approval Form</h2>
           <div class="form-group-1">
-            <input type="number" id="input-1" v-model="info.assignmentNumber" placeholder="Assignment Code" disabled>
-            <input type="number" id="input-2" v-model="info.equipmentId" placeholder="Equipment ID" disabled>
-            <input type="number" id="input-3" v-model="info.equipmentCode" placeholder="Equipment Code" disabled>
-            <input type="text" id="input-4" v-model="info.equipmentName" placeholder="Equipment Name" disabled>
-            <input type="text" id="input-5" v-model="info.description" placeholder="Description" disabled>
-            <input type="number" id="input-6" v-model="info.location" placeholder="Location" disabled>
+            <input type="number" id="input-1" label="Assignment Number" v-model="info.assignmentNumber" placeholder="Assignment Code" disabled>
+            <input type="number" id="input-2" label="Equipment Id" v-model="info.equipmentId" placeholder="Equipment ID" disabled>
+            <input type="number" id="input-3" label="Equipment Code" v-model="info.equipmentCode" placeholder="Equipment Code" disabled>
+            <input type="text" id="input-4" label="Equipment Name" v-model="info.equipmentName" placeholder="Equipment Name" disabled>
+            <input type="text" id="input-5" label="Description" v-model="info.description" placeholder="Description" disabled>
+            <input type="number" id="input-6" label="Location" v-model="info.location" placeholder="Location" disabled>
             <div>
               <b-button
               class="button"
@@ -33,11 +33,11 @@
           </div>
           <hr>
           <div class="form-group-2">
-            <input type="text" id="engi-1" v-model="info.engineerDepartment" placeholder="Department" disabled>
-            <input type="number" id="engi-2" v-model="info.engineerId" placeholder="Engineer ID" disabled>
-            <input type="text" id="engi-3" v-model="info.engineerName" placeholder="Name" disabled>
-            <input type="text" id="engi-4" v-model="info.engineerEmail" placeholder="Email Id" disabled>
-            <input type="number" id="engi-5" v-model="info.engineerPhone" placeholder="Phone Number" disabled>
+            <input type="text" id="engi-1" label="Engineer Department" v-model="info.engineerDepartment" placeholder="Department" disabled>
+            <input type="number" id="engi-2" label="Engineer Id" v-model="info.engineerId" placeholder="Engineer ID" disabled>
+            <input type="text" id="engi-3" label="Engineer Name" v-model="info.engineerName" placeholder="Name" disabled>
+            <input type="text" id="engi-4" label="Engineer Email" v-model="info.engineerEmail" placeholder="Email Id" disabled>
+            <input type="number" id="engi-5" label="Engineer Phone" v-model="info.engineerPhone" placeholder="Phone Number" disabled>
           </div>
           <hr>
            <div class="status blockquote form-group-3">
@@ -64,7 +64,7 @@
                       <img
                         class="card-img-top"
                         height="50%"
-                        src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Two_man_replace_a_main_landing_gear_tire_of_a_plane.jpg"
+                        src="@/assets/img/Placeholder/Approval_Form1.jpg"
                       />
                       <div class="card-body">
                         <h5 class="card-title">Description</h5>
@@ -97,7 +97,7 @@
                       <img
                         class="card-img-top"
                         height="50%"
-                        src="https://www.telegraph.co.uk/content/dam/Travel/leadAssets/32/59/plane-undercarriag_3259724a.jpg?imwidth=450"
+                        src="@/assets/img/Placeholder/Approval_Form2.webp"
                       />
                       <div class="card-body">
                         <h5 class="card-title">Description</h5>
@@ -254,7 +254,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
 .body{
   background-image:linear-gradient(rgba(0, 0, 0, 0.3),
-                       rgba(0, 0, 0, 0.3)),url('https://cdn2.hubspot.net/hubfs/3795684/Satair2018/Content%20dec%202018/ten%20risk%20in%20avaiation%201.jpg');
+                       rgba(0, 0, 0, 0.3)),url('/assets/images/Background/Approval_Form_BG.jpg');
   background-repeat:no-repeat;
   background-attachment:fixed;
   background-size:cover;

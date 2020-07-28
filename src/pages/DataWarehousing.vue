@@ -127,7 +127,7 @@ export default {
 <style lang="css">
 .wareContainer {
   background-image:linear-gradient(rgba(0, 0, 0, 0.8),
-                       rgba(0, 0, 0, 0.8)),url('https://www.cloudvisit.site/wp-content/uploads/2019/03/iStock-1022905536-1.jpg');
+                       rgba(0, 0, 0, 0.8)),url('/assets/images/Background/Data_Warehousing_BG.jpg');
   background-repeat:no-repeat;
   background-attachment:fixed;
   background-size:cover;

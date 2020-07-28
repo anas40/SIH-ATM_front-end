@@ -85,7 +85,7 @@ export default {
 .body{
 
   background-image:linear-gradient(rgba(0, 0, 0, 0.5),
-                       rgba(0, 0, 0, 0.5)),url('https://cdn.hipwallpaper.com/i/16/84/BCJGV9.jpg');
+                       rgba(0, 0, 0, 0.5)),url('/assets/images/Background/EmployeeDashboard_BG.jpg');
   background-repeat:no-repeat;
   background-attachment:fixed;
   background-size:cover;

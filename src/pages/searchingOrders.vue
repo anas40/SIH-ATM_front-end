@@ -201,7 +201,7 @@ export default {
   min-height: 90vh;
   padding: 8px;
   background-image:linear-gradient(rgba(0, 0, 0, 0.5),
-                       rgba(0, 0, 0, 0.5)),url('https://ikarosaviationtraining.com/wp-content/uploads/maintenance-2.jpg');
+                       rgba(0, 0, 0, 0.5)),url('/assets/images/Background/SearchingOrders_BG.jpg');
   background-repeat:no-repeat;
   background-attachment:fixed;
   background-size:cover;
