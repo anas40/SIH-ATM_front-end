@@ -9,7 +9,7 @@
           <label for="SearchQuery">Search via query:</label>
           <input
             v-model="searchQuery"
-            @change="changeHandler"
+            @keyup.enter="changeHandler"
             type="text"
             placeholder="Enter Query"
             id="SearchQuery"
@@ -19,7 +19,7 @@
           <label for="SearchOrder">Search via Order No. :</label>
           <input
             v-model="searchNumber"
-            @change="changeHandler"
+            @keyup.enter="changeHandler"
             type="text"
             id="SearchOrder"
             placeholder="Enter Order No."
@@ -106,8 +106,10 @@ export default {
 
   async mounted() {
     try {
-      const { data } = await axios.get(`http://localhost:3000/equipment-list`)
+      const { data } = await axios.get(`http://localhost:3000/equipment-list`, {
+        headers: { authorization: this.$cookies.get('token') } })
       this.equipments = data
+      console.log("Data warehousing",data)
     } catch (error) {
       if(error.response && error.response.status === 401){
         console.log(error.response)

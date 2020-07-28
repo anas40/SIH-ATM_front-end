@@ -11,7 +11,8 @@
           </div>
         </div>
         <div class="cardsContainer">
-          <div class="card" v-for="order in element.orders" :key="order._id">
+          <div class="card" v-if="element.orders.length === 0">No Orders in {{element.heading}}</div>
+          <div class="card" v-else v-for="order in element.orders" :key="order._id">
             <div>
               <p>{{order.assignmentCode}}</p>
             </div>
@@ -40,24 +41,7 @@ export default {
       totalElement: [
         {
           heading: 'Todo',
-          totalOrders: 4,
-          orders: [
-            {
-              orderId: '1234e54',
-              description: 'Cleaned the extra lubricant',
-              link: '/toorder'
-            },
-            {
-              orderId: '1234e55',
-              description: 'Cleaned the extra lubricant',
-              link: '/toorder'
-            },
-            {
-              orderId: '1234e56',
-              description: 'Cleaned the extra lubricant',
-              link: '/toorder'
-            }
-          ]
+          orders: []
         }
       ]
     }
@@ -145,6 +129,7 @@ export default {
 }
 .card {
   padding: 8px;
+  color: #000;
   margin: 12px 0;
 }
 .card p {

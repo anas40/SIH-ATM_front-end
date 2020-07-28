@@ -34,13 +34,22 @@
             <label for="location">Location :</label>
             <select v-model="locationModel" name="location" id="location">
               <option disabled value>select Location</option>
-              <option v-for="location in locations" :key="location" :value="location">{{location}}</option>
+              <option
+                v-for="location in locations"
+                :key="location._id"
+                :value="location.name"
+              >{{location.name}}</option>
             </select>
           </div>
           <div class="selectContainer">
             <label for="equipment">Equipment :</label>
             <select v-model="equipmentModel" name="equipment" id="equipment">
               <option disabled value>select Equipment</option>
+              <option
+                v-for="equipment in equipments"
+                :key="equipment._id"
+                :value="equipment.name"
+              >{{equipment.name}}</option>
             </select>
           </div>
           <div class="selectContainer">
@@ -74,47 +83,47 @@
     </section>
 
     <div class="orderContainer">
-      <div v-for="number in data.totalOrders" :key="number">
-        <h3>Order : {{number}}</h3>
+      <div v-for="(order,index) in data" :key="order._id">
+        <h3>Order : {{ index+1 }}</h3>
         <div class="order">
           <div class="flex">
             <div class="firstChild">
               Order No. :
-              <span>{{data.orderNo}}</span>
+              <span>{{order.number}}</span>
             </div>
             <div class="secondChild">
               Cycle :
-              <span>{{data.cycle}}</span>
+              <span>{{order.cycle}}</span>
             </div>
           </div>
           <div>
             Equipment :
-            <span>{{data.equipmentId}}</span>
+            <span>{{order.equipment}}</span>
           </div>
           <div>
             Description :
-            <span>{{data.description}}</span>
+            <span>{{order.task}}</span>
           </div>
           <div>
             Status :
-            <span>{{data.status}}</span>
+            <span>{{order.completed}}</span>
           </div>
           <div>
             Location :
-            <span>{{data.location}}</span>
+            <span>{{order.location}}</span>
           </div>
           <div class="flex">
             <div class="firstChild">
               Assigned on :
-              <span>{{data.assignedDate}}</span>
+              <span>{{order.assignedDate}}</span>
             </div>
             <div class="secondChild">
               Deadline :
-              <span>{{data.deadlineDate}}</span>
+              <span>{{order.deadlineDate}}</span>
             </div>
           </div>
           <div class="buttonContainer">
-            <router-link :to="`/complianceform/${data.orderNo}`">Visit Compliance Form</router-link>
+            <router-link :to="`/complianceform/${order._id}`">Visit Compliance Form</router-link>
           </div>
         </div>
       </div>
@@ -136,7 +145,7 @@ export default {
       equId: '',
       assId: '',
       date: '',
-      data: {
+      data:[ {
         name: 'Anas',
         id: '18COB037',
         totalOrders: 2,
@@ -148,13 +157,13 @@ export default {
         status: 'Need replacement',
         assignedDate: '13-Jun-2020',
         deadlineDate: '12-July-2020'
-      }
+      }]
     }
   },
   mounted() {
+    this.getOrders()
     this.getLocation()
     this.getEquipments()
-    this.getOrders()
   },
   methods: {
     handleSearch() {
@@ -163,9 +172,12 @@ export default {
     async getLocation() {
       try {
         const { data: location } = await axios.get(
-          `http://localhost:3000/locations`
+          `http://localhost:3000/locations`,
+          {
+            headers: { authorization: this.$cookies.get('token') }
+          }
         )
-        console.log('locations fetched', location)
+        // console.log('locations fetched', location)
         this.locations = location
       } catch (error) {
         console.error('Error in fetching locations', error)
@@ -174,22 +186,37 @@ export default {
     async getEquipments() {
       try {
         const { data: equipment } = await axios.get(
-          `http://localhost:3000/equipment-list`
+          `http://localhost:3000/equipment-list`,
+          {
+            headers: { authorization: this.$cookies.get('token') }
+          }
         )
-        console.log('eequipmetns fetched', equipment)
+        // console.log('eequipmetns fetched', equipment)
         this.equipments = equipment
       } catch (error) {
-        console.error('Error in fetching equipments', error)
+        console.error('Error in fetchi&& nullng equipments', error)
       }
     },
     async getOrders() {
       try {
-        const { data: orders } = await axios.get(
-          `https://localhost:3000/searchorders?completed=${this.statusBox}&locationId=${this.assId}&equipmentId=${this.equId}`
+        const body = {
+          completed: this.statusBox || 'All',
+          locationId: this.assId || 'All',
+          equipmentId: this.equId || 'All',
+          equipmentName: this.equipmentModel || 'All',
+          locationName: this.locationModel || 'All'
+        }
+        const { data: orders } = await axios.post(
+          `http://localhost:3000/searchorders`,
+          body,
+          {
+            headers: { authorization: this.$cookies.get('token') }
+          }
         )
         this.data = orders
+        console.log('orders fetched', orders)
       } catch (error) {
-        console.error('Error in orders', error)
+        console.log('Error in orders', error, error.response)
       }
     }
   }
@@ -345,17 +372,15 @@ opacity:0.9;
 .orderContainer .buttonContainer a:hover {
   color: cornflowerblue;
 }
-.searchButton{
-  
+.searchButton {
   width: fit-content;
   background-color: #fff;
   border-radius: 4px;
   margin-left: 12px;
   position: relative;
-  right:-89%;
+  right: -89%;
 }
-.searchButton button{
-  
+.searchButton button {
   padding: 12px 20px;
   color: black;
 }
