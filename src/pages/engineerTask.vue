@@ -7,13 +7,13 @@
             <div>
               <h5>
                 Name :
-                <span>{{data.name}}</span>
+                <span>{{engineer.name}}</span>
               </h5>
             </div>
             <div>
               <h5>
                 Id :
-                <span>{{data.id}}</span>
+                <span>{{engineer.engineerID}}</span>
               </h5>
             </div>
           </div>
@@ -25,38 +25,38 @@
         </section>
       </div>
       <section id="heading">
-        Assigned Orders :
+        Assigned Orders : {{data.orders.length}}
         <span>{{data.totalOrders}}</span>
       </section>
       <div class="orderContainer">
-        <div v-for="number in data.totalOrders" :key="number">
-          <h3>Order : {{data.number}}</h3>
+        <div v-for="(order,index) in data.orders" :key="index">
+          <h3>Order : {{index + 1}}</h3>
           <div class="order">
             <div class="flex">
               <div class="firstChild">
                 Order No. :
-                <span>{{data.orderNo}}</span>
+                <span>{{order._id}}</span>
               </div>
               <div class="secondChild">
                 Cycle :
-                <span>{{data.cycle}}</span>
+                <span>{{order.cycle}}</span>
               </div>
             </div>
             <div>
               Equipment :
-              <span>{{data.equipmentId}}</span>
+              <span>{{order.equipment}}</span>
             </div>
             <div>
               Description :
-              <span>{{data.description}}</span>
+              <span>{{order.tasklist[0]}}</span>
             </div>
             <div>
               Status :
-              <span>{{data.status}}</span>
+              <span>Assigned</span>
             </div>
             <div>
               Location :
-              <span>{{data.location}}</span>
+              <span>{{order.location}}</span>
             </div>
             <div class="flex">
               <div class="firstChild">
@@ -69,7 +69,7 @@
               </div>
             </div>
             <div class="buttonContainer">
-              <router-link :to="`/complianceform/${data.orderNo}`">Visit Compliance Form</router-link>
+              <button :value="order._id" @click="moveToProgress">Accept</button>
             </div>
           </div>
         </div>
@@ -84,36 +84,70 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      engineer: {},
       data: {
-        name: 'Anas',
-        id: '18COB037',
-        totalOrders: 4,
-        orderNo: '123jrhj4',
-        cycle: '3 Months',
-        equipmentId: '34hg56',
-        description: 'complete the task',
-        location: 'section 34, Plant 34',
-        status: 'Need replacement',
-        assignedDate: '13-Jun-2020',
-        deadlineDate: '12-July-2020'
+        heading: '',
+        orders: [
+          {
+            name: 'Anas',
+            id: '18COB037',
+            totalOrders: 4,
+            orderNo: '123jrhj4',
+            cycle: '3 Months',
+            equipmentId: '34hg56',
+            description: 'complete the task',
+            location: 'section 34, Plant 34',
+            status: 'Need replacement',
+            assignedDate: '13-Jun-2020',
+            deadlineDate: '12-July-2020'
+          }
+        ]
       }
     }
   },
-  async mounted() {
-    try {
-      //make a request with authorization jwt header to fetch details from bak here
-      const { data } = await axios.get('http://localhost:3000/engineerOrders', {
-        headers: { authorization: this.$cookies.get('token') }
-      })
-      this.data = data
-    } catch (error) {
-       if(error.response && error.response.status === 401){
-        this.$router.push({name:'login'})
-      }
-      console.log('Fetch Error:', error)
-    }
+  mounted() {
+    this.fetchData()
   },
-  methods: {}
+  methods: {
+    async fetchData() {
+      try {
+        //make a request with authorization jwt header to fetch details from bak here
+        const { data } = await axios.get(
+          'http://localhost:3000/engineerOrders',
+          {
+            headers: { authorization: this.$cookies.get('token') }
+          }
+        )
+
+        this.data = data[0]
+        this.engineer = data[4]
+        console.log(data[0])
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$router.push({ name: 'login' })
+        }
+        console.log('Fetch Error:', error)
+      }
+    },
+    async moveToProgress(event) {
+      try {
+        console.log('Press the button', event.target.value)
+        const response = await axios.patch(
+          `http://localhost:3000/toprogress/${event.target.value}`,
+          {},
+          {
+            headers: { authorization: this.$cookies.get('token') }
+          }
+        )
+        if (response.status === 200) {
+          console.log('Accepted order successfully')
+          this.fetchData()
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 }
 </script>
 
