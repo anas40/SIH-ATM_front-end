@@ -1,5 +1,6 @@
 <template>
-  <div class="wareContainer">
+  <Loader v-if="loading" />
+  <div v-else class="wareContainer">
     <section id="searchingBox">
       <div class="headText">
         <p>Search for orders here :</p>
@@ -31,11 +32,11 @@
     <section id="resultParameter">
       <div>
         Search Query :
-        <span>{{search}}</span>
+        <span>{{ search }}</span>
       </div>
       <div>
         Results Found :
-        <span>{{equipments.length}}</span>
+        <span>{{ equipments.length }}</span>
       </div>
     </section>
 
@@ -43,31 +44,38 @@
       <div>
         <h2>Results :</h2>
       </div>
-      <div class="allOrders" v-for="(equipment, i) in equipments" :key="equipment.equipmentCode">
-        <div class="QueryNumber">{{i+1}}</div>
+      <div
+        class="allOrders"
+        v-for="(equipment, i) in equipments"
+        :key="equipment.equipmentCode"
+      >
+        <div class="QueryNumber">{{ i + 1 }}</div>
         <section class="OrderCard">
           <div class="imageContainer">
-            <img :src="require('@/assets/img/new_logo.png')" alt="Engineer who completed this task" />
+            <img
+              :src="require('@/assets/img/new_logo.png')"
+              alt="Engineer who completed this task"
+            />
           </div>
           <div class="dataContainer">
             <div class="MakeFlex">
               <div>
                 <p>
                   EquipmentCode :
-                  <span>{{equipment.equipmentCode}}</span>
+                  <span>{{ equipment.equipmentCode }}</span>
                 </p>
               </div>
               <div>
                 <p>
                   Equipment No. :
-                  <span>{{equipment.equipmentNumber}}</span>
+                  <span>{{ equipment.equipmentNumber }}</span>
                 </p>
               </div>
             </div>
             <div>
               <p>
                 Description :
-                <span>{{equipment.description}}</span>
+                <span>{{ equipment.description }}</span>
               </p>
             </div>
             <div class="MakeFlex">
@@ -93,6 +101,7 @@
 
 <script>
 import Axios from '@/methods/axiosInstance.js'
+import Loader from '@/pages/Layout/Loader'
 
 export default {
   data() {
@@ -101,19 +110,24 @@ export default {
       searchQuery: '',
       search: '',
       searchNumber: '',
-      numResults: ''
+      numResults: '',
+      loading: true
     }
   },
-
+  components: {
+    Loader
+  },
   async mounted() {
     try {
       const { data } = await Axios().get('/equipment-list')
       this.equipments = data
-      console.log("Data warehousing",data)
+      this.loading = false
+      console.log('Data warehousing', data)
     } catch (error) {
-      if(error.response && error.response.status === 401){
+      this.loading = false
+      if (error.response && error.response.status === 401) {
         console.log(error.response)
-        this.$router.push({name:'login'})
+        this.$router.push({ name: 'login' })
       }
       console.log(error)
     }
@@ -128,7 +142,6 @@ export default {
 
 <style lang="css">
 .wareContainer {
-  
   padding: 8px;
   min-height: 100vh;
 }
@@ -140,8 +153,7 @@ export default {
   border-radius: 8px;
 }
 #searchingBox {
-  background: #0f0c29;  /* fallback for old browsers */
-
+  background: #0f0c29; /* fallback for old browsers */
 }
 #queryContainer {
   padding: 8px;
@@ -191,8 +203,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  background: #4b6cb7;  /* fallback for old browsers */
-
+  background: #4b6cb7; /* fallback for old browsers */
 }
 #resultParameter > div {
   padding: 4px 8px;
@@ -202,8 +213,7 @@ export default {
   background-color: white;
 }
 #OrderContainer {
-  background: #2b5876;  /* fallback for old browsers */
-
+  background: #2b5876; /* fallback for old browsers */
 }
 #OrderContainer h2 {
   color: #fff;

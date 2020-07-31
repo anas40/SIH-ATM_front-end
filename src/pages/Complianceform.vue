@@ -1,5 +1,7 @@
 <template>
-  <div class="body">
+  <Loader v-if="loading" />
+
+  <div v-else class="body">
     <b-container fluid class="bv-example-row mt-60">
       <b-row>
         <b-col cols="12" md="8" offset-md="2" id="main-box">
@@ -152,10 +154,12 @@
 </template>
 <script>
 import Axios from '@/methods/axiosInstance.js'
+import Loader from '@/pages/Layout/Loader'
 
 export default {
   data() {
     return {
+      loading: true,
       form: {},
       optionsTaskList: [
         { text: 'Completed', value: 'done' },
@@ -170,12 +174,18 @@ export default {
       image: []
     }
   },
+  components: {
+    Loader
+  },
   async created() {
     try {
       const { data } = await Axios().get(`/compliance/${this.$route.params.id}`)
       console.log(data)
       this.form = data
+      this.loading = false
     } catch (error) {
+      this.loading = false
+
       if (error.response && error.response.status === 401) {
         this.$router.push({ name: 'login' })
       }
@@ -202,18 +212,28 @@ export default {
     addFile() {
       this.files++
     },
-    onSubmit(evt) {
-      evt.preventDefault()
-      const fd = new FormData()
-      this.capturedFile.forEach(file => fd.append('workImage', file))
-      fd.append('comments', JSON.stringify(this.capturedComment))
-      fd.append('taskListValue', JSON.stringify(this.TaskListValue))
+    async onSubmit(evt) {
+      try {
+        this.loading = true
 
-      Axios().post(`/submit-compliance/${this.$route.params.id}`, fd)
-        .then(res => {
-          this.$router.push({ name: 'dashboard' })
-        })
-        .catch(e => console.log('Error :', e))
+        evt.preventDefault()
+        const fd = new FormData()
+        this.capturedFile.forEach(file => fd.append('workImage', file))
+        fd.append('comments', JSON.stringify(this.capturedComment))
+        fd.append('taskListValue', JSON.stringify(this.TaskListValue))
+
+        const res = await Axios().post(
+          `/submit-compliance/${this.$route.params.id}`,
+          fd
+        )
+
+        this.$router.push({ name: 'dashboard' })
+
+        this.loading = false
+      } catch (error) {
+        this.loading = false
+        console.log(error)
+      }
     },
     onReset(evt) {
       evt.preventDefault()

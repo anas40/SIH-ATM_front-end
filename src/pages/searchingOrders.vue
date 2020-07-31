@@ -1,5 +1,7 @@
 <template>
-  <section class="searchingcontainer">
+  <Loader v-if="loading" />
+
+  <section v-else class="searchingcontainer">
     <div class="heading">
       <h1>Assignment Collection</h1>
       <p>{{ equipmentModel }}</p>
@@ -156,6 +158,8 @@
 <script>
 import Axios from '@/methods/axiosInstance.js'
 import axios from 'axios'
+import Loader from '@/pages/Layout/Loader'
+
 export default {
   data() {
     return {
@@ -167,6 +171,7 @@ export default {
       equId: '',
       assId: '',
       date: '',
+      loading: true,
       orderData: [
         {
           name: 'Anas',
@@ -184,6 +189,9 @@ export default {
       ]
     }
   },
+  components: {
+    Loader
+  },
   mounted() {
     try {
       console.log('request fired')
@@ -200,11 +208,14 @@ export default {
               this.locations = location
               this.equipments = equipment
               console.log(equipment)
+              this.loading = false
             }
           )
         )
         .catch(error => console.log(error))
     } catch (error) {
+      this.loading = false
+
       console.log(error, error.response)
     }
   },
@@ -215,6 +226,8 @@ export default {
 
     async getOrdersSearch() {
       try {
+        this.loading = true
+
         const body = {
           completed: this.statusBox || 'All',
           locationId: this.assId || 'All',
@@ -226,7 +239,10 @@ export default {
         const { data: orders } = await Axios().post('/searchorders', body)
         this.orderData = orders
         console.log('orders fetched', orders)
+        this.loading = false
       } catch (error) {
+        this.loading = false
+
         console.log('Error in orders', error, error.response)
       }
     }

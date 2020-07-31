@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <Loader v-if="loading" />
+
+  <div v-else>
     <div id="container">
       <div class="profile">
         <section class="details">
@@ -26,10 +28,9 @@
       </div>
       <section id="heading">
         Assigned Orders : {{ ordersData.orders.length }}
-        
       </section>
       <div v-if="ordersData.orders" class="orderContainer">
-        <div  v-for="(order, index) in ordersData.orders" :key="index">
+        <div v-for="(order, index) in ordersData.orders" :key="index">
           <h3>Order : {{ index + 1 }}</h3>
           <div class="order">
             <div class="flex">
@@ -80,6 +81,7 @@
 
 <script>
 import Axios from '@/methods/axiosInstance.js'
+import Loader from '@/pages/Layout/Loader'
 
 export default {
   data() {
@@ -102,8 +104,12 @@ export default {
             deadlineDate: '12-July-2020'
           }
         ]
-      }
+      },
+      loading: true
     }
+  },
+  components: {
+    Loader
   },
   created() {
     this.fetchData()
@@ -116,8 +122,11 @@ export default {
 
         this.ordersData = data[0]
         this.engineer = data[4]
-        console.log("from engineer task",data[0],data[4])
+        console.log('from engineer task', data[0], data[4])
+        loading = false
       } catch (error) {
+        loading = false
+
         if (error.response && error.response.status === 401) {
           this.$router.push({ name: 'login' })
         }
@@ -126,13 +135,20 @@ export default {
     },
     async moveToProgress(event) {
       try {
+        loading = ture
+
         console.log('Press the button', event.target.value)
-        const response = await Axios().patch(`/toprogress/${event.target.value}`)
+        const response = await Axios().patch(
+          `/toprogress/${event.target.value}`
+        )
         if (response.status === 200) {
           console.log('Accepted order successfully')
           this.fetchData()
         }
+        loading: false
       } catch (error) {
+        loading: false
+
         console.log(error)
       }
     }

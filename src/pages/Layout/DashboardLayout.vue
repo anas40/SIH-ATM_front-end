@@ -48,6 +48,9 @@ export default {
 }
 </script>
 <style scoped>
+.main-panel{
+  min-height: 100vh;
+}
 p{
   color : white
 }

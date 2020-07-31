@@ -1,5 +1,7 @@
 <template>
-  <div class="body">
+  <Loader v-if="loading" />
+
+  <div v-else class="body">
     <b-container class="bv-example-row">
       <b-row>
         <b-col cols="12" md="8" offset="2" id="main-box">
@@ -239,6 +241,9 @@
 <script>
 import Axios from '@/methods/axiosInstance.js'
 import axios from 'axios'
+
+import Loader from '@/pages/Layout/Loader'
+
 export default {
   data() {
     return {
@@ -247,23 +252,29 @@ export default {
       info: {},
       equipmentId: this.$route.params.id,
       selected: null,
+      loading: true,
 
       remarks: null
     }
+  },
+  components: {
+    Loader
   },
   methods: {
     createUndoneList(tasklist) {
       const undone = []
       tasklist.forEach(task => {
         if (task.status !== 'done') {
-          undone.push(task.task)
-        ``}
+          undone.push(task.task)``
+        }
       })
 
       return undone
     },
     async approveReport() {
       try {
+        this.loading = true
+
         console.log(
           'undone task list',
           this.createUndoneList(this.info.tasklist)
@@ -278,7 +289,10 @@ export default {
         if (response.status === 200) {
           this.$router.push({ name: 'dashboard' })
         }
+        this.loading = false
       } catch (error) {
+        this.loading = false
+
         console.log('Error in approval submission :', error)
       }
     },
@@ -307,7 +321,10 @@ export default {
       console.table('Approval form data', orderData)
 
       this.bufferToBase64(this.info.images)
+      this.loading = false
     } catch (error) {
+      this.loading = false
+
       if (error.response && error.response.status === 401) {
         this.$router.push({ name: 'login' })
       }

@@ -1,5 +1,13 @@
 <template>
-  <div class="body">
+  <Loader v-if="loading" />
+
+  <div v-else class="body">
+    <div class="graphContainer">
+      <iframe
+        src="https://snapshot.raintank.io/dashboard/snapshot/9uEVbIDFc34TcnbGtFS87zOcYnGa2XAg?orgId=2&from=1578446449310&to=1578446489626&viewPanel=4"
+        frameborder="0"
+      ></iframe>
+    </div>
     <b-container class="bv-example-row">
       <b-row>
         <b-col cols="12" md="10" offset="1">
@@ -29,7 +37,7 @@
                     Equipment Code{{ info.equipmentCode }}
                   </p>
                   <p class="description value">
-                    Equipment Description {{ info.description }} 
+                    Equipment Description {{ info.description }}
                   </p>
                   <p class="value" style="color:#8a1d07">
                     <b>Assignment Code</b><span class="pull-right">712832</span>
@@ -85,7 +93,6 @@
                         value-field="engineerID"
                         text-field="name"
                       >
-                       
                       </b-form-select>
                       <b-form-textarea
                         class="comments"
@@ -95,10 +102,7 @@
                         rows="4"
                       ></b-form-textarea>
                     </div>
-                    <b-button
-                      class="mt-3"
-                      block
-                      @click="assignEngineer"
+                    <b-button class="mt-3" block @click="assignEngineer"
                       >Assign</b-button
                     >
                   </b-modal>
@@ -115,6 +119,7 @@
 <script>
 import Axios from '@/methods/axiosInstance.js'
 import axios from 'axios'
+import Loader from '@/pages/Layout/Loader'
 
 export default {
   data() {
@@ -124,11 +129,16 @@ export default {
       selected: 'default',
       options: [{ text: 'Select Engineer', value: 'default' }],
       engineers: [],
-      remarks: null
+      remarks: null,
+      loading: true
     }
+  },
+  components:{
+    Loader
   },
   async mounted() {
     try {
+      
       const getOrder = () => Axios().get(`/order/${this.equipmentId}`)
       const getEngineerList = () => Axios().get(`/engineers`)
 
@@ -138,9 +148,11 @@ export default {
           console.table(orderData)
           this.engineers = engiData
           console.table(engiData)
+          this.loading = false
         })
       )
     } catch (error) {
+      this.loading = false
       if (error.response && error.response.status === 401) {
         this.$router.push({ name: 'login' })
       }
@@ -150,22 +162,25 @@ export default {
   methods: {
     async assignEngineer() {
       try {
-        
+        this.loading = true
         const payLoad = {
           equipmentCode: this.info.equipmentCode,
           orderId: this.equipmentId,
           engineerID: this.selected,
           additionalRemarks: this.remarks || 'No remarks'
         }
-console.log(payLoad)
+        console.log(payLoad)
         const response = await Axios().post('/submit-form', payLoad)
         if (response.status === 200) {
           this.$bvModal.hide('assignModal')
+          this.loading = false
           this.$router.push({ name: 'joblist' })
         } else {
+          this.loading = false
           alert('Some Error Ocurred,Please submit again!')
         }
       } catch (error) {
+        this.loading = false
         if (error.response && error.response.status === 401) {
           console.log('401 ocured in item description', error)
           this.$router.push({ name: 'login' })
@@ -180,13 +195,21 @@ console.log(payLoad)
 <style scoped>
 .body {
   background-color: hsl(20, 100%, 80%);
- 
   padding: 60px 0;
   font-family: 'Roboto Slab';
   font-size: 13px;
   line-height: 1.8;
   color: black;
   font-weight: 400;
+}
+.graphContainer{
+  margin-bottom: 30px;
+}
+.graphContainer>iframe{
+  height: 400px;
+  width: 800px;
+  margin: auto;
+  display: block;
 }
 .heading {
   line-height: 1.8;

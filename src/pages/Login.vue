@@ -1,5 +1,6 @@
 <template>
-  <div class="body">
+  <Loader v-if="loading" />
+  <div v-else class="body">
     <div class="container">
       <div class="container-login100 content">
         <div class="panel-blur"></div>
@@ -70,44 +71,57 @@
 
 <script>
 import Axios from '@/methods/axiosInstance.js'
+import Loader from '@/pages/Layout/Loader'
 export default {
   name: 'login',
   data() {
     return {
       name: '',
-      password: ''
+      password: '',
+      loading: true
     }
   },
-  mounted() {
-    if (this.$cookies.isKey('token')) {
-      Axios().post('/verify')
-        .then(res => {
-          if (res.status === 200) {
-            this.$router.push({ name: 'dashboard' })
-          }
-        })
-        .catch(e => {
-          console.log('Do the login')
-        })
+  components: {
+    Loader
+  },
+  async mounted() {
+    try {
+      if (this.$cookies.isKey('token')) {
+        const res = await Axios().post('/verify')
+
+        if (res.status === 200) {
+          this.loading = false
+          this.$router.push({ name: 'dashboard' })
+        }
+      }
+      this.loading = false
+    } catch (error) {
+      console.log(error)
+      this.loading = false
     }
   },
   methods: {
     // dashboard(){
     // this.$router.push({ path: '/dashboard' });
-    loginMe() {
-      Axios().post('/login', {
-        email: this.name,
-        password: this.password
-      })
-        .then(res => {
-          //redirecting and setup of a cookie return with jwt
-          if (res.status === 200) {
-            console.log(res.data)
-            this.$cookies.set('token', res.data.token)
-            this.$router.push({ name: 'dashboard' })
-          }
+    async loginMe() {
+      try {
+        this.loading = true
+        const res = await Axios().post('/login', {
+          email: this.name,
+          password: this.password
         })
-        .catch(er => console.log(er))
+
+        if (res.status === 200) {
+          console.log(res.data)
+          this.$cookies.set('token', res.data.token)
+          this.loading = false
+          this.$router.push({ name: 'dashboard' })
+        }
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
     }
   }
 }

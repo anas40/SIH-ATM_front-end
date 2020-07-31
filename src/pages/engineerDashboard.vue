@@ -1,6 +1,6 @@
 <template>
-  <div class="employeeContainer body">
-   
+  <Loader v-if="loading" />
+  <div v-else class="employeeContainer body">
     <div class="scrollBox">
       <section v-for="element in totalElement" :key="element.heading">
         <div class="header">
@@ -41,11 +41,17 @@
 
 <script>
 import Axios from '@/methods/axiosInstance.js'
+import Loader from '@/pages/Layout/Loader'
+
 export default {
   data() {
     return {
-      totalElement: []
+      totalElement: [],
+      loading: true
     }
+  },
+  components: {
+    Loader
   },
   async mounted() {
     try {
@@ -55,7 +61,10 @@ export default {
       //removing engineer data from array
       data.pop()
       this.totalElement = data
+      this.loading = false
     } catch (error) {
+      this.loading = false
+
       if (error.response && error.response.status === 401) {
         this.$router.push({ name: 'login' })
       }
