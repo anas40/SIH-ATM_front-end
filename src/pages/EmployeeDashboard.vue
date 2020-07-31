@@ -1,9 +1,28 @@
 <template>
   <div class="employeeContainer body">
     <div class="scrollBox">
+      <div v-if="totalElement.length === 0">No Orders</div>
       <section v-for="element in totalElement" :key="element.heading">
         <div class="header">
-          <h5>{{element.heading}}</h5>
+          <h5>{{ element.heading }}</h5>
+          <div v-if="element.heading === 'Todo'" class="selectTheTime">
+            <div>
+              <select
+                @change="changeOrders"
+                v-model="orderByTime"
+                name="orders"
+                id="OrderByTime"
+              >
+                <option value="" disabled>select Time</option>
+                <option value="daily">daily</option>
+                <option value="weekly">weekly</option>
+
+                <option value="monthly">monthly</option>
+
+                <option value="six-monthly">six-monthly</option>
+              </select>
+            </div>
+          </div>
           <div class="hamButtons">
             <span></span>
             <span></span>
@@ -11,20 +30,45 @@
           </div>
         </div>
         <div class="cardsContainer">
-          <div class="card" v-if="element.orders.length === 0">No Orders in {{element.heading}}</div>
-          <div class="card" v-else v-for="order in element.orders" :key="order._id">
-            <div>
-              <p>{{order.assignmentCode}}</p>
-            </div>
-            <div>
-              <p>{{order.work}}</p>
-            </div>
-            <div class="linkContainer">
-              <router-link v-if="element.heading === 'Todo'" :to="`/joblist/${order._id}`" >Assign</router-link>
-              <router-link v-else-if="element.heading ===  'Progress'" :to="`/approval/${order._id}`">Check</router-link>
-              <router-link v-else-if="element.heading === 'Assigned'" to="/searchingOrders" >Search</router-link>
-              <router-link v-else-if="element.heading ===  'Review'" :to="`/approval/${order._id}`">Approve</router-link>
-              <router-link v-else-if="element.heading ===  'Completed'" to="/searchingorders">Search</router-link>
+          <div class="card" v-if="element.orders.length === 0">
+            No Orders in {{ element.heading }}
+          </div>
+          <div v-else><p class="totalText">Total Orders : {{ element.orders.length }}</p></div>
+          <div v-if="element.orders.length !== 0">
+            <div class="card" v-for="order in element.orders" :key="order._id">
+              <div>
+                <p>{{ order.assignmentCode }}</p>
+              </div>
+              <div>
+                <p>{{ order.work }}</p>
+              </div>
+              <div class="linkContainer">
+                <router-link
+                  v-if="element.heading === 'Todo'"
+                  :to="`/joblist/${order._id}`"
+                  >Assign</router-link
+                >
+                <router-link
+                  v-else-if="element.heading === 'Progress'"
+                  :to="`/approval/${order._id}`"
+                  >Check</router-link
+                >
+                <router-link
+                  v-else-if="element.heading === 'Assigned'"
+                  to="/searchingOrders"
+                  >Search</router-link
+                >
+                <router-link
+                  v-else-if="element.heading === 'Review'"
+                  :to="`/approval/${order._id}`"
+                  >Approve</router-link
+                >
+                <router-link
+                  v-else-if="element.heading === 'Completed'"
+                  to="/searchingorders"
+                  >Search</router-link
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -34,56 +78,65 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Axios from '@/methods/axiosInstance.js'
 export default {
   data() {
     return {
-      totalElement: [
-        {
-          heading: 'Todo',
-          orders: []
+      totalElement: [],
+      orderByTime: ''
+    }
+  },
+  methods: {
+    async changeOrders() {
+      try {
+        const { data } = await Axios().get(`/orders/${this.orderByTime}`)
+        console.log(`orders change,${this.orderByTime}`, data)
+        this.totalElement[0].orders = data
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$router.push({ name: 'login' })
         }
-      ]
+        console.log(error)
+      }
     }
   },
   async mounted() {
     try {
-      const { data } = await axios.get(`http://localhost:3000/employeeOrders`, {
-        headers: { authorization: this.$cookies.get('token') }
-      })
+      const { data } = await Axios().get('/employeeOrders')
       console.log('this is data', data)
       this.totalElement = data
     } catch (error) {
-      
-      if(error.response && error.response.status === 401){
+      if (error.response && error.response.status === 401) {
         this.$router.push({ name: 'login' })
       }
       console.log(error)
     }
-  },
- 
+  }
 }
 </script>
 
 <style lang="css" scoped>
-.body{
-
-  background-image:linear-gradient(rgba(0, 0, 0, 0.5),
-                       rgba(0, 0, 0, 0.5)),url('https://cdn.hipwallpaper.com/i/16/84/BCJGV9.jpg');
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-  background-size:cover;
-  padding: 60px 0;
-  font-family:'Roboto Slab';
-  font-size:13px;
+.body {
+  background-color: hsl(20, 100%, 80%);
+  padding: 10px 0;
+  font-family: 'Roboto Slab';
+  font-size: 13px;
   line-height: 1.8;
   color: black;
-  font-weight:400;
+  font-weight: 500;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
+}
+#OrderByTime {
+  padding: 4px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  background-color: white;
 }
 .hamButtons {
   cursor: pointer;
@@ -104,12 +157,17 @@ export default {
   background-color: #204051;
   */
 }
-
+.totalText{
+  font-size: 15px;
+  color:white;
+  font-weight: 600;
+}
 .scrollBox {
   display: inline-flex;
 }
 
 .scrollBox > section {
+  height: 80vh;
   border-radius: 8px;
   padding: 8px;
   background-color: #42aacc;
@@ -117,15 +175,23 @@ export default {
   color: #fff;
   margin: 20px 0px 20px 20px;
   min-width: 300px;
-  min-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-  opacity:0.9;
+  opacity: 0.9;
+}
+.scrollBox > ::-webkit-scrollbar {
+  width: 5px !important;
+  display: block;
+}
+.scrollBox > ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+.scrollBox > ::-webkit-scrollbar-thumb {
+  background-color: gold;
 }
 .cardsContainer {
   padding: 8px;
   border-radius: 8px;
-  /* background-color: #84a9ac; */
 }
 .card {
   padding: 8px;

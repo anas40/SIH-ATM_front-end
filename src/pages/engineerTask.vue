@@ -7,13 +7,13 @@
             <div>
               <h5>
                 Name :
-                <span>{{engineer.name}}</span>
+                <span>{{ engineer.name }}</span>
               </h5>
             </div>
             <div>
               <h5>
                 Id :
-                <span>{{engineer.engineerID}}</span>
+                <span>{{ engineer.engineerID }}</span>
               </h5>
             </div>
           </div>
@@ -25,30 +25,30 @@
         </section>
       </div>
       <section id="heading">
-        Assigned Orders : {{data.orders.length}}
-        <span>{{data.totalOrders}}</span>
+        Assigned Orders : {{ ordersData.orders.length }}
+        
       </section>
-      <div class="orderContainer">
-        <div v-for="(order,index) in data.orders" :key="index">
-          <h3>Order : {{index + 1}}</h3>
+      <div v-if="ordersData.orders" class="orderContainer">
+        <div  v-for="(order, index) in ordersData.orders" :key="index">
+          <h3>Order : {{ index + 1 }}</h3>
           <div class="order">
             <div class="flex">
               <div class="firstChild">
                 Order No. :
-                <span>{{order._id}}</span>
+                <span>{{ order._id }}</span>
               </div>
               <div class="secondChild">
                 Cycle :
-                <span>{{order.cycle}}</span>
+                <span>{{ order.cycle }}</span>
               </div>
             </div>
             <div>
               Equipment :
-              <span>{{order.equipment}}</span>
+              <span>{{ order.equipment }}</span>
             </div>
             <div>
               Description :
-              <span>{{order.tasklist[0]}}</span>
+              <span>{{ order.tasklist && order.tasklist[0] }}</span>
             </div>
             <div>
               Status :
@@ -56,16 +56,16 @@
             </div>
             <div>
               Location :
-              <span>{{order.location}}</span>
+              <span>{{ order.location }}</span>
             </div>
             <div class="flex">
               <div class="firstChild">
                 Assigned on :
-                <span>{{data.assignedDate}}</span>
+                <span>{{ ordersData.assignedDate }}</span>
               </div>
               <div class="secondChild">
                 Deadline :
-                <span>{{data.deadlineDate}}</span>
+                <span>{{ ordersData.deadlineDate }}</span>
               </div>
             </div>
             <div class="buttonContainer">
@@ -79,13 +79,13 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Axios from '@/methods/axiosInstance.js'
 
 export default {
   data() {
     return {
       engineer: {},
-      data: {
+      ordersData: {
         heading: '',
         orders: [
           {
@@ -105,23 +105,18 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     this.fetchData()
   },
   methods: {
     async fetchData() {
       try {
         //make a request with authorization jwt header to fetch details from bak here
-        const { data } = await axios.get(
-          'http://localhost:3000/engineerOrders',
-          {
-            headers: { authorization: this.$cookies.get('token') }
-          }
-        )
+        const { data } = await Axios().get('/engineerOrders')
 
-        this.data = data[0]
+        this.ordersData = data[0]
         this.engineer = data[4]
-        console.log(data[0])
+        console.log("from engineer task",data[0],data[4])
       } catch (error) {
         if (error.response && error.response.status === 401) {
           this.$router.push({ name: 'login' })
@@ -132,13 +127,7 @@ export default {
     async moveToProgress(event) {
       try {
         console.log('Press the button', event.target.value)
-        const response = await axios.patch(
-          `http://localhost:3000/toprogress/${event.target.value}`,
-          {},
-          {
-            headers: { authorization: this.$cookies.get('token') }
-          }
-        )
+        const response = await Axios().patch(`/toprogress/${event.target.value}`)
         if (response.status === 200) {
           console.log('Accepted order successfully')
           this.fetchData()
@@ -155,11 +144,11 @@ export default {
 #container {
   padding: 12px;
   min-height: 75vh;
-  background-image:linear-gradient(rgba(0, 0, 0, 0.5),
-                       rgba(0, 0, 0, 0.5)),url('https://www.lufthansa-technik.com/documents/5875801/6266982/Digtal+on+air+1920x1080/efed82f2-4f47-4000-9be0-e092d8b377c8?t=1578320594487');
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-  background-size:cover;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('https://www.lufthansa-technik.com/documents/5875801/6266982/Digtal+on+air+1920x1080/efed82f2-4f47-4000-9be0-e092d8b377c8?t=1578320594487');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 .profile {
   background-color: white;
@@ -169,7 +158,7 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 8px 20px;
-  opacity:0.9;
+  opacity: 0.9;
 }
 #heading {
   font-size: 1.4rem;
@@ -178,7 +167,7 @@ export default {
   border-radius: 4px;
   padding: 12px 20px;
   background-color: #e8505b;
-  opacity:0.95;
+  opacity: 0.95;
 }
 .userImage img {
   height: 150px;
@@ -196,7 +185,7 @@ export default {
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 0 4px -2px black;
-  opacity:0.9;
+  opacity: 0.9;
 }
 .order > div {
   font-weight: 500;

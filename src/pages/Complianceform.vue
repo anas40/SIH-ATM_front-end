@@ -34,7 +34,13 @@
                 placeholder="Equipment Code"
                 disabled
               />
-              <input type="text" id="input-5" v-model="form.status" placeholder="Status" disabled />
+              <input
+                type="text"
+                id="input-5"
+                v-model="form.status"
+                placeholder="Status"
+                disabled
+              />
               <input
                 type="text"
                 id="input-6"
@@ -42,7 +48,13 @@
                 placeholder="Location"
                 disabled
               />
-              <input type="number" id="input-7" v-model="form.cycle" placeholder="Cycle" disabled />
+              <input
+                type="number"
+                id="input-7"
+                v-model="form.cycle"
+                placeholder="Cycle"
+                disabled
+              />
             </div>
 
             <div class="form-group-2">
@@ -65,7 +77,11 @@
                 </div>
               </b-form-group>
 
-              <div id="fileSelector" v-for="(file, index) in files" :key="index">
+              <div
+                id="fileSelector"
+                v-for="(file, index) in files"
+                :key="index"
+              >
                 <div class="card">
                   <div class="card-body">
                     <label for="file" size="sm">File :</label>
@@ -94,21 +110,34 @@
                     <div>
                       <img :src="image[index]" alt />
                     </div>
-                    <b-form-group id="input-group-8" label="Comments:" label-for="input-8">
-                      <textarea cols="46" rows="2" id="input-8" v-model="capturedComment[index]"></textarea>
+                    <b-form-group
+                      id="input-group-8"
+                      label="Comments:"
+                      label-for="input-8"
+                    >
+                      <textarea
+                        cols="46"
+                        rows="2"
+                        id="input-8"
+                        v-model="capturedComment[index]"
+                      ></textarea>
                     </b-form-group>
                   </div>
                 </div>
                 <br />
               </div>
 
-          <div class="pull-right">
-            <b-button class="mr-1" type="submit" id="submit">Submit</b-button>
-            <b-button class="btn-danger" type="reset" >Reset</b-button>
-          </div>
+              <div class="pull-right">
+                <b-button class="mr-1" type="submit" id="submit"
+                  >Submit</b-button
+                >
+                <b-button class="btn-danger" type="reset">Reset</b-button>
+              </div>
 
               <div class="pull-right">
-                <b-button class="mr-1" type="submit" id="submit">Submit</b-button>
+                <b-button class="mr-1" type="submit" id="submit"
+                  >Submit</b-button
+                >
                 <b-button type="reset">Reset</b-button>
               </div>
             </div>
@@ -122,7 +151,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import Axios from '@/methods/axiosInstance.js'
 
 export default {
   data() {
@@ -141,14 +170,9 @@ export default {
       image: []
     }
   },
-  async mounted() {
+  async created() {
     try {
-      const { data } = await axios.get(
-        `http://localhost:3000/compliance/${this.$route.params.id}`,
-        {
-          headers: { authorization: this.$cookies.get('token') }
-        }
-      )
+      const { data } = await Axios().get(`/compliance/${this.$route.params.id}`)
       console.log(data)
       this.form = data
     } catch (error) {
@@ -185,14 +209,7 @@ export default {
       fd.append('comments', JSON.stringify(this.capturedComment))
       fd.append('taskListValue', JSON.stringify(this.TaskListValue))
 
-      axios
-        .post(
-          `http://localhost:3000/submit-compliance/${this.$route.params.id}`,
-          fd,
-          {
-            headers: { authorization: this.$cookies.get('token') }
-          }
-        )
+      Axios().post(`/submit-compliance/${this.$route.params.id}`, fd)
         .then(res => {
           this.$router.push({ name: 'dashboard' })
         })

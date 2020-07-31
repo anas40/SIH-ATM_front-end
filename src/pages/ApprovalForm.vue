@@ -47,33 +47,6 @@
               placeholder="Location"
               disabled
             />
-            <div>
-              <b-button
-                class="button"
-                variant="primary"
-                id="show-btn"
-                @click="$bvModal.show('bv-modal-example')"
-                >Show Task List</b-button
-              >
-
-              <b-modal id="bv-modal-example" hide-footer>
-                <template v-slot:modal-title>List of the tasks</template>
-                <div class="d-block" id="tasklistBlock">
-                  <h3>Tasks</h3>
-                  <ul id="tasklist">
-                    <li v-for="(task, index) in info.tasklist" :key="index">
-                      {{ task }}
-                    </li>
-                  </ul>
-                </div>
-                <b-button
-                  class="mt-3 button"
-                  block
-                  @click="$bvModal.hide('bv-modal-example')"
-                  >Done</b-button
-                >
-              </b-modal>
-            </div>
           </div>
           <hr />
           <div class="form-group-2">
@@ -117,14 +90,21 @@
           <div class="status blockquote form-group-3">
             <h6 class="mb-0">
               Opened on
-              <span class="pull-right">Closed on</span>
             </h6>
             <footer class="blockquote-footer" style="padding-top:0px">
               3/10/20
-              <span class="pull-right">03/10/20</span>
             </footer>
           </div>
+          <b-form-group>
+            <h3>Task List:</h3>
 
+            <div v-for="(task, index) in info.tasklist" :key="index">
+              <br />
+              <p>
+                # {{ task.task }} <span>{{ task.status }}</span>
+              </p>
+            </div>
+          </b-form-group>
           <div class="form-group-4">
             <div class="justification card box">
               <h3 class="card-title" style="padding:5px; margin-left:10px">
@@ -133,13 +113,9 @@
               <b-container class="bv-example-row">
                 <div class="card-body">
                   <b-row>
-                    <b-col v-for="(image,index) in images" :key="index">
+                    <b-col v-for="(image, index) in images" :key="index">
                       <div class="card">
-                        <img
-                          class="card-img-top"
-                          height="50%"
-                          src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Two_man_replace_a_main_landing_gear_tire_of_a_plane.jpg"
-                        />
+                        <img class="card-img-top" height="50%" :src="image" />
                         <div class="card-body">
                           <h5 class="card-title">Description</h5>
                           <p class="card-text">
@@ -173,7 +149,6 @@
                         </div>
                       </div>
                     </b-col>
-                    
                   </b-row>
                 </div>
               </b-container>
@@ -255,15 +230,15 @@
     <b-container class="bv-example-row">
       <!-- Stack the columns on mobile by making one full-width and the other half-width -->
       <b-row>
-        <b-col cols="12" md="8" offset="2"></b-col>
+        <b-col cols="12" md="8" offset="2">Heellloo</b-col>
       </b-row>
     </b-container>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
-
+import Axios from '@/methods/axiosInstance.js'
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -272,11 +247,41 @@ export default {
       info: {},
       equipmentId: this.$route.params.id,
       selected: null,
-      engineers: [],
+
       remarks: null
     }
   },
   methods: {
+    createUndoneList(tasklist) {
+      const undone = []
+      tasklist.forEach(task => {
+        if (task.status !== 'done') {
+          undone.push(task.task)
+        ``}
+      })
+
+      return undone
+    },
+    async approveReport() {
+      try {
+        console.log(
+          'undone task list',
+          this.createUndoneList(this.info.tasklist)
+        )
+        const response = await Axios().post(
+          `/submit-approval/${this.equipmentId}`,
+          {
+            undoneTasks: this.createUndoneList(this.info.tasklist)
+          }
+        )
+
+        if (response.status === 200) {
+          this.$router.push({ name: 'dashboard' })
+        }
+      } catch (error) {
+        console.log('Error in approval submission :', error)
+      }
+    },
     bufferToBase64(imageArray) {
       imageArray.forEach(image => {
         const url = btoa(
@@ -294,26 +299,12 @@ export default {
   async mounted() {
     try {
       //first get request to fetch order details
-      const {
-        data: orderData
-      } = await axios.get(
-        `http://localhost:3000/approval-form/${this.equipmentId}`,
-        { headers: { authorization: this.$cookies.get('token') } }
+      const { data: orderData } = await Axios().get(
+        `/approval-form/${this.equipmentId}`
       )
+
       this.info = orderData
-      console.log('Order Data', orderData)
-      const { data: engiData } = await axios.get(
-        'http://localhost:3000/engineers',
-        {
-          headers: { authorization: this.$cookies.get('token') }
-        }
-      )
-      this.engineers = engiData
-      this.engineers.unshift({
-        engineerID: null,
-        name: 'Select the engineer',
-        disabled: true
-      })
+      console.table('Approval form data', orderData)
 
       this.bufferToBase64(this.info.images)
     } catch (error) {

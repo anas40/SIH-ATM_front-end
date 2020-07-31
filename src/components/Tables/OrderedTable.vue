@@ -12,24 +12,23 @@
     </div>
     <b-table striped hover :fields="fields" :items="items">
       <template v-slot:cell(name)="data">
-        <router-link :to="`/joblist/${data.item._id}`">{{ data.value }}</router-link>
+        <router-link :to="`/joblist/${data.item._id}`">{{
+          data.value
+        }}</router-link>
       </template>
     </b-table>
   </div>
 </template>
 
 <script>
-const axios = require('axios')
+import Axios from '@/methods/axiosInstance.js'
+
 export default {
   mounted() {
-    axios
-      .get('http://localhost:3000/get-orders', 
-      {
-        headers: { authorization: this.$cookies.get('token') }
-      })
+    Axios().get('/get-orders')
       .then(response => (this.items = response.data))
       .catch(er => {
-        console.log('Fetch Error:', er);
+        console.log('Fetch Error:', er)
       })
   },
 

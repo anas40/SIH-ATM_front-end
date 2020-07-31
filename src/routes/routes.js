@@ -13,6 +13,7 @@ import EmployeeDashboard from '@/pages/EmployeeDashboard.vue'
 import engineerDashboard from '@/pages/engineerDashboard.vue'
 import engineerTask from '@/pages/engineerTask.vue'
 import searchingOrders from '@/pages/searchingOrders.vue'
+import monitoringDashboard from '@/pages/monitoringDashboard.vue'
 // import Typography from "@/pages/Typography.vue";
 // import Icons from "@/pages/Icons.vue";
 // import Maps from "@/pages/Maps.vue";
@@ -73,6 +74,11 @@ const routes = [{
       path: '/searchingorders',
       name:'searchingOrders',
       component: searchingOrders
+    },
+    {
+      path: '/monitoringDashboard',
+      name: 'monitoring',
+      component: monitoringDashboard
     }
   ]
 }]

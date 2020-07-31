@@ -92,7 +92,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Axios from '@/methods/axiosInstance.js'
+
 export default {
   data() {
     return {
@@ -106,8 +107,7 @@ export default {
 
   async mounted() {
     try {
-      const { data } = await axios.get(`http://localhost:3000/equipment-list`, {
-        headers: { authorization: this.$cookies.get('token') } })
+      const { data } = await Axios().get('/equipment-list')
       this.equipments = data
       console.log("Data warehousing",data)
     } catch (error) {
@@ -128,11 +128,7 @@ export default {
 
 <style lang="css">
 .wareContainer {
-  background-image:linear-gradient(rgba(0, 0, 0, 0.8),
-                       rgba(0, 0, 0, 0.8)),url('https://www.cloudvisit.site/wp-content/uploads/2019/03/iStock-1022905536-1.jpg');
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-  background-size:cover;
+  
   padding: 8px;
   min-height: 100vh;
 }
@@ -145,9 +141,7 @@ export default {
 }
 #searchingBox {
   background: #0f0c29;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-opacity:0.9;
+
 }
 #queryContainer {
   padding: 8px;
@@ -198,9 +192,7 @@ opacity:0.9;
   flex-wrap: wrap;
   justify-content: space-between;
   background: #4b6cb7;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #182848, #4b6cb7);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #182848, #4b6cb7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-opacity:0.9;
+
 }
 #resultParameter > div {
   padding: 4px 8px;
@@ -211,9 +203,7 @@ opacity:0.9;
 }
 #OrderContainer {
   background: #2b5876;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #4e4376, #2b5876);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #4e4376, #2b5876); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-opacity:0.9;
+
 }
 #OrderContainer h2 {
   color: #fff;
