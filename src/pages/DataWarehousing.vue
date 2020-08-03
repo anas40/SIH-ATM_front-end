@@ -92,6 +92,18 @@
                 </p>
               </div>
             </div>
+            <div class="ManualFormContainer">
+              <b-button
+                class="btn-sm btn-success"
+                id="assign-btn"
+                @click="$bvModal.show('ManualForm' + i)"
+                >Add Manual Data
+              </b-button>
+
+              <b-modal :id="'ManualForm' + i" hide-footer>
+                <ThatForm :equipment="equipment._id" :i="i"/>
+              </b-modal>
+            </div>
           </div>
         </section>
       </div>
@@ -102,6 +114,7 @@
 <script>
 import Axios from '@/methods/axiosInstance.js'
 import Loader from '@/pages/Layout/Loader'
+import ThatForm from '@/pages/ThatForm.vue'
 
 export default {
   data() {
@@ -115,7 +128,8 @@ export default {
     }
   },
   components: {
-    Loader
+    Loader,
+    ThatForm
   },
   async mounted() {
     try {
@@ -141,10 +155,14 @@ export default {
 </script>
 
 <style lang="css">
+ .modal-dialog {
+  max-width: 600px !important;
+}
 .wareContainer {
   background-color: #e0e1dd;
   padding: 8px;
   min-height: 100vh;
+  position: relative;
 }
 
 .wareContainer > section {
@@ -250,17 +268,17 @@ export default {
   color: rgb(34, 34, 34);
 }
 .imageContainer {
-  padding:10px;
-  padding-right:15px;
+  padding: 10px;
+  padding-right: 15px;
   flex-basis: 20%;
   min-width: 100px;
   max-width: 400px;
 }
 .imageContainer img {
   width: 100%;
-  height:60% !important;
-  border-radius:10px;
-  margin-top:25%;
+  height: 60% !important;
+  border-radius: 10px;
+  margin-top: 25%;
 }
 .dataContainer {
   flex-basis: 80%;

@@ -7,13 +7,10 @@
         <b-col cols="12" md="8" offset="2" id="main-box">
           <h2>Approval Form</h2>
           <div class="form-group-1">
-            <input
-              type="text"
-              id="input-1"
-              v-model="info.assignmentCode"
-              placeholder="Assignment Code"
-              disabled
-            />
+            <p>
+                Assignment Code :
+                <span>{{ info.assignmentCode }}</span>
+              </p>
             <input
               type="number"
               id="input-2"

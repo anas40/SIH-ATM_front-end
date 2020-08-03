@@ -8,55 +8,38 @@
           <h2>Compliance form</h2>
           <b-form @submit="onSubmit" @reset="onReset" v-if="show">
             <div class="form-group-1">
-              <input
-                type="number"
-                id="input-1"
-                v-model="form.assignmentNumber"
-                placeholder="Assignment Number"
-                disabled
-              />
-              <input
-                type="text"
-                id="input-2"
-                v-model="form.equipmentName"
-                placeholder="Equipment Name"
-                disabled
-              />
-              <input
-                type="text"
-                id="input-3"
-                v-model="form.description"
-                placeholder="Description"
-                disabled
-              />
-              <input
-                type="number"
-                id="input-4"
-                v-model="form.equipmentCode"
-                placeholder="Equipment Code"
-                disabled
-              />
-              <input
-                type="text"
-                id="input-5"
-                v-model="form.status"
-                placeholder="Status"
-                disabled
-              />
-              <input
-                type="text"
-                id="input-6"
-                v-model="form.location"
-                placeholder="Location"
-                disabled
-              />
-              <input
-                type="number"
-                id="input-7"
-                v-model="form.cycle"
-                placeholder="Cycle"
-                disabled
-              />
+              <p>
+                Assignment Date :
+                <span>{{ form.assignmentDate.slice(0, 10) }}</span>
+              </p>
+               <p>
+                Deadline Date :
+                <span>{{ form.DeadlineDate.slice(0, 10) }}</span>
+              </p>
+
+              <p>
+                Equipment Name : <span>{{ form.equipmentName }}</span>
+              </p>
+
+              <p>
+                Description :
+                <span>{{ form.description }}</span>
+              </p>
+
+              <p>
+                Code : <span>{{ form.equipmentCode }}</span>
+              </p>
+
+              <p>
+                Status : <span>{{ form.status || 'Progress' }}</span>
+              </p>
+
+              <p>
+                Location : <span>{{ form.location }}</span>
+              </p>
+              <p>
+                Cycle: <span>{{ form.cycle }}</span>
+              </p>
             </div>
 
             <div class="form-group-2">
@@ -138,7 +121,7 @@
             </div>
 
             <!-- for files -->
-            <b-button class="mr-1" @click="addFile" >Add Files</b-button>
+            <b-button class="mr-1" @click="addFile">Add Files</b-button>
           </b-form>
           <br />
         </b-col>
@@ -255,7 +238,7 @@ export default {
   margin: 0 20px;
 }
 .body {
-  background-color:#0d1b2a;
+  background-color: #0d1b2a;
   padding: 60px 0;
   font-family: 'Roboto Slab';
   font-size: 13px;

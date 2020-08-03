@@ -12,13 +12,13 @@
     </div>
     <div v-if="graphical" class="container-fluid">
       <div class="row">
-    <div class="col-sm-3 col-md-6 chart" style="padding:30px;">
-      <pie-chart :chart-data="chartData"></pie-chart>
-    </div>
-    <div class="col-sm-3 col-md-6 chart" style="padding:30px;">
-      <bar-chart :chart-data="chartData"></bar-chart>
-    </div>
-    </div>
+        <div class="col-sm-3 col-md-6 chart" style="padding:30px;">
+          <pie-chart :chart-data="chartData"></pie-chart>
+        </div>
+        <div class="col-sm-3 col-md-6 chart" style="padding:30px;">
+          <bar-chart :chart-data="barChart"></bar-chart>
+        </div>
+      </div>
     </div>
     <div v-else class="scrollBox">
       <section v-for="element in totalElement" :key="element.heading">
@@ -47,7 +47,7 @@
               <p>{{ order.work }}</p>
             </div>
             <div class="linkContainer">
-              <router-link  :to="returnLink(element.heading, order._id)"
+              <router-link :to="returnLink(element.heading, order._id)"
                 >Check Details</router-link
               >
             </div>
@@ -71,7 +71,10 @@ export default {
       totalElement: [],
       loading: true,
       chartData: null,
-      graphical: true
+      graphical: true,
+      typeofuser: '',
+      barChart: null,
+      healthData: ''
     }
   },
   components: {
@@ -81,29 +84,52 @@ export default {
   },
   async mounted() {
     try {
+      const { data: usertype } = await Axios().get('/typeofuser')
+
+      if (usertype.typeofUser !== 'engineer') {
+        this.$router.push({ name: 'Superintendent' })
+      }
+
       console.log('Firing request for order from engineer dashboard')
       const { data } = await Axios().get('/engineerOrders')
       console.log('engineer dashboard', data)
       //removing engineer data from array
       data.pop()
       this.totalElement = data
+
+      const { data: health } = await Axios().get('/gethealth')
+      console.log('health', health)
+      this.healthData = health
+
       this.loading = false
 
       this.chartData = {
         labels: ['Assigned', 'Progress', 'Review', 'Completed'],
         datasets: [
           {
-            backgroundColor: [
-              '#2ecc71',
-              '#3498db',
-              '#9b59b6',
-              '#34495e'
-            ],
+            backgroundColor: ['#2ecc71', '#3498db', '#9b59b6', '#34495e'],
             data: [
               this.totalElement[0].orders.length,
               this.totalElement[1].orders.length,
               this.totalElement[2].orders.length,
               this.totalElement[3].orders.length
+            ]
+          }
+        ]
+      }
+
+      this.barChart = {
+        labels: ['Healthy', 'Fair', 'Poor', 'Scrap'],
+        datasets: [
+          {
+            label: 'Equipment State',
+            backgroundColor: '#f87979',
+
+            data: [
+              this.healthData.Healthy,
+              this.healthData.Fair,
+              this.healthData.Poor,
+              this.healthData.Scrap
             ]
           }
         ]
@@ -135,8 +161,8 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.chart{
-  box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+.chart {
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 .body {
   background-color: #e0e1dd;
@@ -220,13 +246,12 @@ export default {
   padding: 4px 8px;
   cursor: pointer;
   background-color: #0d1b2a;
-  color:white !important;
+  color: white !important;
 }
 h1 {
   font-size: 2rem;
   border: 1px solid;
 }
-
 
 .button-cover {
   margin: 10px;
@@ -246,7 +271,6 @@ h1 {
   padding: 5px;
 }
 
-
 .knobs,
 .layer {
   position: absolute;
@@ -258,7 +282,7 @@ h1 {
 
 .button {
   position: relative;
-  
+
   width: 150px;
   height: 36px;
   margin: 0 auto;
@@ -275,7 +299,6 @@ h1 {
 }
 
 .checkbox {
-
   position: relative;
   width: 100%;
   height: 100%;
@@ -291,7 +314,6 @@ h1 {
 }
 
 .layer {
-  
   width: 100%;
   background-color: #ebf7fc;
   transition: 0.3s ease all;
@@ -317,15 +339,15 @@ h1 {
   content: 'Graph';
   width: 50px;
   left: 4px;
-  top:5px;
+  top: 5px;
   height: 36px;
 }
 
 #button-9 .knobs:after {
   content: 'Card';
   width: 50px;
-  right:-50px;
-  top:5px;
+  right: -50px;
+  top: 5px;
 }
 
 #button-9 .knobs:before,
@@ -353,7 +375,6 @@ h1 {
 #button-9 .checkbox:checked + .knobs span {
   left: 100px;
   background-color: #f44336;
-  
 }
 
 #button-9 .checkbox:checked ~ .layer {

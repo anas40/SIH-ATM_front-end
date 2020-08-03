@@ -5,13 +5,15 @@ import Login from "@/pages/Login.vue"
 
 // import Dashboard from "@/pages/Dashboard.vue";
 import Monitor from '@/pages/Monitor.vue'
+import ThatForm from '@/pages/ThatForm.vue'
+
 
 import DataWarehousing from '@/pages/DataWarehousing.vue'
 import TableList from '@/pages/TableList.vue'
 import itemDescription from '@/pages/itemDescription.vue'
 import ComplianceForm from '@/pages/Complianceform.vue'
 import ApprovalForm from '@/pages/ApprovalForm.vue'
-import EmployeeDashboard from '@/pages/EmployeeDashboard.vue'
+import Superintendent from '@/pages/Superintendent.vue'
 import engineerDashboard from '@/pages/engineerDashboard.vue'
 import engineerTask from '@/pages/engineerTask.vue'
 import searchingOrders from '@/pages/searchingOrders.vue'
@@ -29,7 +31,7 @@ const routes = [{
   path: "/dashboard",
   name: "dashboard",
   component: DashboardLayout,
-  redirect: "/employeedashboard",
+  redirect: "/superintendent",
 
   children: [{
     path: '/joblist',
@@ -42,9 +44,14 @@ const routes = [{
     component: Monitor
   },
   {
-    path: '/employeedashboard',
-    name: 'EmployeeDashboard',
-    component: EmployeeDashboard
+    path:'/that',
+    name:'ThatForm',
+    component: ThatForm
+  },
+  {
+    path: '/superintendent',
+    name: 'Superintendent',
+    component: Superintendent
   }
     ,
   {

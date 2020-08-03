@@ -23,27 +23,30 @@
                 <!-- Product Description -->
                 <div class="item-description ">
                   <span class="eid"
-                    >Equipment Id : {{ info.equipmentId }}</span
+                    >Id : {{ info._id }}</span
                   >
 
                   <h1 class="equipmentName">
-                    Equipment Name : {{ info.equipmentName.slice(0,20) }}
-
+                    Name : {{ info.equipmentName.slice(0,20) }}
                   </h1>
                   <p class="value" >
-                    Equipment Code : {{ info.equipmentCode }}
+                    Equipment: {{ info.equipmentCode }}
                   </p>
                   <p class="description value">
-                    Equipment Description : {{ info.description }}
+                    Description : {{ info.description }}
                   </p>
 
                   <p class="value" style="color:#fff">
-                    <b>Assignment Code : </b><span class="pull-right">{{info.equipmentCode}}</span>
+                    Assignment Code :<span class="pull-right">{{info.equipmentCode}}</span>
 
                   </p>
                   <p class="value" style="color:#fff">
-                    <b>Location : </b
-                    ><span class="pull-right">{{info.location}}</span>
+                    Location :
+                    <span class="pull-right">{{info.location}}</span>
+                  </p>
+                  <p class="value" style="color:#fff">
+                    <b>Deadline : </b
+                    ><span class="pull-right">{{info.deadlineDate.slice(0,10)}}</span>
                   </p>
                   <b-button
                     class="btn-sm btn-info"
@@ -173,7 +176,7 @@ export default {
         if (response.status === 200) {
           this.$bvModal.hide('assignModal')
           this.loading = false
-          this.$router.push({ name: 'EmployeeDashboard' })
+          this.$router.push({ name: 'Superintendent' })
         } else {
           this.loading = false
           alert('Some Error Ocurred,Please submit again!')
@@ -202,6 +205,7 @@ export default {
   color: black;
   font-weight: 400;
 }
+
 
 .heading {
   line-height: 1.8;
@@ -274,7 +278,7 @@ p {
 }
 .item-description h1 {
   font-weight: 400;
-  font-size: 20px;
+  font-size: 16px;
   color: #fff;
   
 }

@@ -103,14 +103,14 @@
       </div>
     </section>
 
-    <div class="orderContainer">
+    <div v-if="!loading" class="orderContainer">
       <div v-for="(order, index) in orderData" :key="order._id">
         <h3>Order : {{ index + 1 }}</h3>
         <div class="order">
           <div class="flex">
             <div class="firstChild">
-              Order No. :
-              <span>{{ order.number }}</span>
+              Assignment Code :
+              <span>{{ order.assignmentCode }}</span>
             </div>
             <div class="secondChild">
               Cycle :
@@ -123,7 +123,7 @@
           </div>
           <div>
             Description :
-            <span>{{ order.task }}</span>
+            <span>{{ order.work }}</span>
           </div>
           <div>
             Status :
@@ -136,11 +136,11 @@
           <div class="flex">
             <div class="firstChild">
               Assigned on :
-              <span>{{ order.assignedDate }}</span>
+              <span v-if="order.assignmentDate">{{ order.assignmentDate.slice(0,10) }}</span>
             </div>
             <div class="secondChild">
               Deadline :
-              <span>{{ order.deadlineDate }}</span>
+              <span>{{ order.deadlineDate.slice(0,10) }}</span>
             </div>
           </div>
           <div class="buttonContainer">
@@ -206,7 +206,7 @@ export default {
               this.orderData = orders
               this.locations = location
               this.equipments = equipment
-              console.log(equipment)
+              console.log({orders},{location},{equipment})
               this.loading = false
             }
           )
@@ -226,7 +226,8 @@ export default {
     async getOrdersSearch() {
       try {
         this.loading = true
-
+        
+        console.log("date",(this.date));
         const body = {
           date: this.date || 'All',
           completed: this.statusBox || 'All',

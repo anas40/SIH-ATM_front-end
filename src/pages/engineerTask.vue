@@ -45,11 +45,11 @@
             </div>
             <div>
               Equipment :
-              <span>{{ order.equipment }}</span>
+              <span>{{ order.equipmentCode }}</span>
             </div>
             <div>
               Description :
-              <span>{{ order.tasklist && order.tasklist[0] }}</span>
+              <span>{{ order.work }}</span>
             </div>
             <div>
               Status :
@@ -62,11 +62,11 @@
             <div class="flex">
               <div class="firstChild">
                 Assigned on :
-                <span>{{ ordersData.assignedDate }}</span>
+                <span v-if="order.assignmentDate">{{ order.assignmentDate.slice(0,10) }}</span>
               </div>
               <div class="secondChild">
                 Deadline :
-                <span>{{ ordersData.deadlineDate }}</span>
+                <span v-if="order.deadlineDate">{{ order.deadlineDate.slice(0,10) }}</span>
               </div>
             </div>
             <div class="buttonContainer">

@@ -86,13 +86,18 @@ export default {
   },
   async mounted() {
     try {
-      
       if (this.$cookies.isKey('token')) {
         const res = await Axios().post('/verify')
 
         if (res.status === 200) {
-          this.loading = false
-          this.$router.push({ name: 'dashboard' })
+          const { data: usertype } = await Axios().get('/typeofuser')
+          if (usertype.typeofUser === 'engineer') {
+            this.loading = false
+            this.$router.push({ name: 'engineerDashboard' })
+          } else {
+            this.loading = false
+            this.$router.push({ name: 'dashboard' })
+          }
         }
       }
       this.loading = false

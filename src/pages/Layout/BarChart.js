@@ -1,18 +1,25 @@
-import { Bar } from 'vue-chartjs'
- 
+
+import { Bar, mixins } from 'vue-chartjs'
+
+const { reactiveProp } = mixins
+
 export default {
   extends: Bar,
-  mounted () {
-    // Overwriting base render method with actual data.
-    this.renderChart({
-      labels: ['Healthy', 'Fair', 'Poor', 'Scrap'],
-      datasets: [
-        {
-          label: 'Equipment State',
-          backgroundColor: '#f87979',
-          data: [20, 40, 14, 12]
+  mixins: [reactiveProp],
+  props: ['options'],
+  mounted() {
+    // this.chartData is created in the mixin.
+    // If you want to pass options please create a local options object
+    this.renderChart(this.chartData, {
+      responsive: true,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            }
         }
-      ]
-    })
-  }
+          ]
+    }
+  })
+}
 }
