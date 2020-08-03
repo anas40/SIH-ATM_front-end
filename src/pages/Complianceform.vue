@@ -10,11 +10,11 @@
             <div class="form-group-1">
               <p>
                 Assignment Date :
-                <span>{{ form.assignmentDate.slice(0, 10) }}</span>
+                <span v-if="form.assignmentDate">{{ form.assignmentDate.slice(0, 10) }}</span>
               </p>
                <p>
                 Deadline Date :
-                <span>{{ form.DeadlineDate.slice(0, 10) }}</span>
+                <span v-if="form.DeadlineDate">{{ form.DeadlineDate.slice(0, 10) }}</span>
               </p>
 
               <p>
