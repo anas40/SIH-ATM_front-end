@@ -18,8 +18,8 @@
         <md-icon>search</md-icon>
         <p>Search Orders</p>
       </sidebar-link>
-      <sidebar-link v-if="user === 'employee'" to="/addequipment">
-        <md-icon>equipment</md-icon>
+      <sidebar-link v-if="user === 'employee'" to="/addequipmentform">
+        <md-icon>house</md-icon>
         <p>Add Equipment</p>
       </sidebar-link>
       <div id="monitorContainer">

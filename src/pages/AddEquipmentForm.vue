@@ -113,7 +113,7 @@ export default {
         const response = await Axios().post('/addequipment', payLoad)
 
         if (response.status === 200) {
-          this.$router.push({ name: 'addequipment' })
+          this.$router.push({ name: 'DataWarehousing' })
         }
       } catch (error) {
         console.log(error)

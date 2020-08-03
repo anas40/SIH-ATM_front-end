@@ -205,7 +205,7 @@ export default {
           fd
         )
 
-        this.$router.push({ name: 'dashboard' })
+        this.$router.push({ name: 'engineerDashboard' })
 
         this.loading = false
       } catch (error) {
